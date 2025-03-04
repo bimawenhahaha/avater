@@ -103,7 +103,20 @@ function drawUserImage() {
     const scale = parseFloat(scaleInput.value);
     const x = parseInt(xInput.value);
     const y = parseInt(yInput.value);
-    ctx.drawImage(userImage, x * 2, y * 2, userImage.width * scale * 2, userImage.height * scale * 2);
+
+    // 计算图像的中心点
+    const centerX = userImage.width / 2;
+    const centerY = userImage.height / 2;
+
+    // 计算缩放后的图像尺寸
+    const scaledWidth = userImage.width * scale;
+    const scaledHeight = userImage.height * scale;
+
+    // 计算绘制位置，确保图像中心点在Canvas中心
+    const drawX = (canvas.width - scaledWidth) / 2 + x * 2;
+    const drawY = (canvas.height - scaledHeight) / 2 + y * 2;
+
+    ctx.drawImage(userImage, drawX, drawY, scaledWidth, scaledHeight);
 }
 
 // 监听缩放和位置变化
