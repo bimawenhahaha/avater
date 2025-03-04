@@ -36,7 +36,7 @@
 </head>
 <body>
 <div style="display: flex;flex-direction: column;align-items: center;">
-    <canvas id="avatarCanvas" width="400" height="400" style="width: 200px; height: 200px;"></canvas>
+    <canvas id="avatarCanvas" width="800" height="800" style="width: 400px; height: 400px;"></canvas>
     <input type="file" id="upload" accept="image/*" />
     <label for="upload" style="margin-top: 15px">上传头像</label>
 
@@ -141,7 +141,7 @@ yInput.addEventListener('input', function () {
 const downloadBtn = document.getElementById('downloadBtn');
 
 downloadBtn.addEventListener('click', function () {
-    const dataURL = canvas.toDataURL('image/png');
+    const dataURL = canvas.toDataURL('image/png', 1.0); // 设置第二个参数为1.0以获得最高质量
     const link = document.createElement('a');
     link.href = dataURL;
     link.download = 'avatar_with_overlay.png';
