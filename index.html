@@ -36,7 +36,7 @@
 </head>
 <body>
 <div style="display: flex;flex-direction: column;align-items: center;">
-    <canvas id="avatarCanvas" width="800" height="800" style="width: 400px; height: 400px;"></canvas>
+    <canvas id="avatarCanvas" width="1024" height="1024" style="width: 512px; height: 512px;"></canvas>
     <input type="file" id="upload" accept="image/*" />
     <label for="upload" style="margin-top: 15px">上传头像</label>
 
@@ -115,6 +115,10 @@ function drawUserImage() {
     // 计算绘制位置，确保图像中心点在Canvas中心
     const drawX = (canvas.width - scaledWidth) / 2 + x * 2;
     const drawY = (canvas.height - scaledHeight) / 2 + y * 2;
+
+    // 使用高质量的缩放算法
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     ctx.drawImage(userImage, drawX, drawY, scaledWidth, scaledHeight);
 }
