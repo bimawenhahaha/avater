@@ -1,156 +1,64 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>头像生成器</title>
-    <style>        body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin-top: 50px;
-    }
-    label {
-        font-size: 18px;
-        cursor: pointer;
-        border: 1px solid #ccc;
-        padding: 10px 20px;
-        border-radius: 5px;
-    }
-    input[type="file"] {
-        display: none;
-    }
-    canvas {
-        margin-top: 20px;
-        border: 1px solid #000;
-    }
-    .controls {
-        margin-top: 20px;
-    }
-    .controls input[type="range"] {
-        width: 300px;
-        margin: 10px;
-    }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar Creator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div style="display: flex;flex-direction: column;align-items: center;">
-    <canvas id="avatarCanvas" width="1024" height="1024" style="width: 512px; height: 512px;"></canvas>
-    <input type="file" id="upload" accept="image/*" />
-    <label for="upload" style="margin-top: 15px">上传头像</label>
+<div class="container">
+    <div style="display:flex">
+        <canvas style="flex-shrink: 0" id="avatarCanvas" width="1024" height="1024" style="border: 1px solid #ccc"></canvas>
+        <!-- 添加挂件缩略图列表 -->
+        <div id="accessoryThumbnails" class="thumbnail-list"></div>
+        <!-- 添加选中的挂件缩略图显示区域 -->
+        <div style="flex-direction: column;display:flex">
+            <div id="selectedAccessory" class="selected-thumbnail"></div>
+            <div style="display: flex;flex-direction: column">
+                <!-- 添加位置和缩放控件 -->
+                <label for="accessoryPositionX">Position X:</label>
+                <input type="range" id="accessoryPositionX" min="0" max="1024" value="512">
+                <label for="accessoryPositionY">Position Y:</label>
+                <input type="range" id="accessoryPositionY" min="0" max="1024" value="512">
+                <label for="accessoryScale">Scale:</label>
+                <input type="range" id="accessoryScale" min="0.1" max="2" step="0.1" value="1">
+            </div>
+            <div style="display: flex">
+                <label for="accessoryInput" class="upload-button">Upload Accessories</label>
+                <input type="file" id="accessoryInput" multiple accept="image/*">
+            </div>
 
-    <div class="controls">
-        <label for="scale">缩放:</label>
-        <input type="range" id="scale" min="0.1" max="2" step="0.1" value="1">
-        <label for="x">X轴位置:</label>
-        <input type="range" id="x" min="-100" max="100" step="1" value="0">
-        <label for="y">Y轴位置:</label>
-        <input type="range" id="y" min="-100" max="100" step="1" value="0">
+        </div>
+
+    </div>
+    <div>
+
+    </div>
+    <div style="display:flex; width: 100%;flex-direction: row">
+        <div>
+            <div style="display: flex">
+                <!-- 使用label标签包裹input元素，并设置class为upload-button -->
+                <label for="profileImageInput" class="upload-button">Upload Profile Image</label>
+                <input type="file" id="profileImageInput" accept="image/*">
+            </div>
+            <div style="display: flex;flex-direction: column">
+                <!-- 添加位置和缩放控件 -->
+                <label for="avatarPositionX">Position X:</label>
+                <input type="range" id="avatarPositionX" min="0" max="1024" value="512">
+                <label for="avatarPositionY">Position Y:</label>
+                <input type="range" id="avatarPositionY" min="0" max="1024" value="512">
+                <label for="avatarScale">Scale:</label>
+                <input type="range" id="avatarScale" min="0.1" max="2" step="0.1" value="1">
+            </div>
+        </div>
+        <!-- 修改按钮样式并添加id -->
+        <button id="downloadButton" class="download-button">下载头像</button>
     </div>
 
-    <button id="downloadBtn">下载头像</button>
+
+
 </div>
-
-<script>    // JavaScript部分
-const uploadInput = document.getElementById('upload');
-const canvas = document.getElementById('avatarCanvas');
-const ctx = canvas.getContext('2d');
-const scaleInput = document.getElementById('scale');
-const xInput = document.getElementById('x');
-const yInput = document.getElementById('y');
-
-// 红色圆圈挂件（PSD转为PNG后加载）
-const overlayImage = new Image();
-overlayImage.src = './assets/avaterFrame.PNG'; // 替换为你的红色圆圈挂件图片路径
-
-// 当图片加载完成后绘制到Canvas上
-overlayImage.onload = function () {
-    drawOverlay();
-};
-
-// 绘制红色圆圈挂件
-function drawOverlay() {
-    ctx.drawImage(overlayImage, 0, 0, canvas.width, canvas.height);
-}
-
-// 定义全局变量来存储用户上传的图片
-let userImage = new Image();
-
-// 处理用户上传的头像
-uploadInput.addEventListener('change', function (event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-        userImage.src = e.target.result;
-
-        userImage.onload = function () {
-            // 清空Canvas并绘制用户头像
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawUserImage();
-            drawOverlay();
-        };
-    };
-
-    reader.readAsDataURL(file);
-});
-
-// 绘制用户头像
-function drawUserImage() {
-    const scale = parseFloat(scaleInput.value);
-    const x = parseInt(xInput.value);
-    const y = parseInt(yInput.value);
-
-    // 计算图像的中心点
-    const centerX = userImage.width / 2;
-    const centerY = userImage.height / 2;
-
-    // 计算缩放后的图像尺寸
-    const scaledWidth = userImage.width * scale;
-    const scaledHeight = userImage.height * scale;
-
-    // 计算绘制位置，确保图像中心点在Canvas中心
-    const drawX = (canvas.width - scaledWidth) / 2 + x * 2;
-    const drawY = (canvas.height - scaledHeight) / 2 + y * 2;
-
-    // 使用高质量的缩放算法
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-
-    ctx.drawImage(userImage, drawX, drawY, scaledWidth, scaledHeight);
-}
-
-// 监听缩放和位置变化
-scaleInput.addEventListener('input', function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawUserImage();
-    drawOverlay();
-});
-
-xInput.addEventListener('input', function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawUserImage();
-    drawOverlay();
-});
-
-yInput.addEventListener('input', function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawUserImage();
-    drawOverlay();
-});
-
-const downloadBtn = document.getElementById('downloadBtn');
-
-downloadBtn.addEventListener('click', function () {
-    const dataURL = canvas.toDataURL('image/png', 1.0); // 设置第二个参数为1.0以获得最高质量
-    const link = document.createElement('a');
-    link.href = dataURL;
-    link.download = 'avatar_with_overlay.png';
-    link.click();
-});
-</script>
+<script type="module" src="script.js"></script>
 </body>
 </html>

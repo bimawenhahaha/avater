@@ -1,0 +1,116 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#avatarCanvas {
+    width: 512px;
+    height: 512px;
+}
+
+
+#profileImageInput, #accessoryInput {
+    display: none; /* 隐藏原始输入框 */
+}
+
+/* 添加新的样式规则 */
+.upload-button {
+    background: linear-gradient(45deg, #007bff, #00c8ff); /* 设置背景颜色为蓝色渐变 */
+    color: white; /* 设置文字颜色为白色 */
+    border: none; /* 移除边框 */
+    padding: 10px 20px; /* 设置内边距 */
+    font-size: 16px; /* 设置字体大小 */
+    cursor: pointer; /* 设置鼠标悬停时的指针样式 */
+    margin-top: 20px; /* 设置顶部外边距 */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* 添加阴影效果 */
+    border-radius: 8px; /* 添加圆角 */
+}
+
+/* 添加提示信息 */
+.upload-button::after {
+    content: " (Upload high-resolution images for best quality)";
+    font-size: 12px;
+    color: #555;
+    display: block;
+    margin-top: 5px;
+}
+
+/* 添加:hover伪类 */
+.upload-button:hover {
+    background: linear-gradient(45deg, #0066cc, #00b3ff); /* 改变背景颜色 */
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5); /* 改变阴影效果 */
+}
+
+/* 添加:active伪类 */
+.upload-button:active {
+    background: linear-gradient(45deg, #0055aa, #00aaff); /* 模拟按下状态的背景颜色 */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* 模拟按下状态的阴影效果 */
+}
+
+/* 添加下载按钮样式 */
+.download-button {
+    background: linear-gradient(45deg, #28a745, #218838); /* 设置背景颜色为绿色渐变 */
+    color: white; /* 设置文字颜色为白色 */
+    border: none; /* 移除边框 */
+    padding: 10px 20px; /* 设置内边距 */
+    font-size: 16px; /* 设置字体大小 */
+    cursor: pointer; /* 设置鼠标悬停时的指针样式 */
+    margin-top: 20px; /* 设置顶部外边距 */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* 添加阴影效果 */
+    border-radius: 8px; /* 添加圆角 */
+    height: 60px;
+    margin-left: 10px;
+}
+
+/* 添加:hover伪类 */
+.download-button:hover {
+    background: linear-gradient(45deg, #218838, #1e7e34); /* 改变背景颜色 */
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5); /* 改变阴影效果 */
+}
+
+/* 添加:active伪类 */
+.download-button:active {
+    background: linear-gradient(45deg, #1e7e34, #155724); /* 模拟按下状态的背景颜色 */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* 模拟按下状态的阴影效果 */
+}
+
+/* 缩略图列表样式 */
+.thumbnail-list {
+    width: 62px;
+    flex-wrap: wrap;
+    margin-left: 30px;
+    height: 512px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    margin-right: 30px;
+    img {
+        margin-bottom: 10px;
+    }
+}
+
+.thumbnail {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.thumbnail:hover {
+    border-color: #007bff;
+}
+
+/* 选中的挂件缩略图样式 */
+.selected-thumbnail {
+    margin-top: 20px;
+    width: 200px;
+    height: 200px;
+    border: 1px solid #007bff;
+}
+
+.selected-thumbnail-img {
+    width: 100%;
+    height: 100%;
+}
