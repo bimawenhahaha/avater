@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 定义头像挂件的图片路径
     const avatarFrames = {
         'avatarFrame1': './assets/avatarFrame1.PNG',
-        'avatarFrame2': './assets/avatarFrame2.PNG'
+        'avatarFrame2': './assets/avatarFrame2.PNG',
+        'avatarFrame3': './assets/avatarFrame3.PNG',
     };
 
     // 当前选中的头像挂件
@@ -35,12 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // 添加选中效果
         avatarFrame1.classList.remove('selected');
         avatarFrame2.classList.remove('selected');
+        avatarFrame3.classList.remove('selected'); // 确保移除所有选中效果
         document.getElementById(frameId).classList.add('selected');
     }
 
     // 添加点击事件监听器
     avatarFrame1.addEventListener('click', () => switchAvatarFrame('avatarFrame1'));
     avatarFrame2.addEventListener('click', () => switchAvatarFrame('avatarFrame2'));
+    avatarFrame3.addEventListener('click', () => switchAvatarFrame('avatarFrame3'));
 
     // 初始化时加载默认头像挂件
     loadAndDrawAvatarFrame(currentAvatarFrame);
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 启用图像平滑处理
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
-
+    console.log(avatarFrame3);
     // Load default avatar frame with error handling
     const avatarFrame = new Image();
     avatarFrame.src = './assets/avatarFrame1.PNG';
@@ -181,6 +184,58 @@ document.addEventListener('DOMContentLoaded', () => {
         thumbnailList.appendChild(thumbnail);
     }
 
+    // 获取删除按钮元素
+    const deleteButton = document.getElementById('deleteButton');
+
+    // 删除选中的小组件
+// 修正版的 deleteAccessory 函数
+    // 修正版：删除挂件但保留选中区域
+    function deleteAccessory(selectedThumbnail) {
+        // 从 accessories 数组中移除对应挂件
+        const index = accessories.findIndex(accessory => accessory.img.src === selectedThumbnail.src);
+        if (index > -1) {
+            accessories.splice(index, 1);
+        }
+
+        // 清空 canvas 并重新绘制头像、框架、剩余挂件
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (profileImage) {
+            ctx.drawImage(
+                profileImage,
+                profilePosition.x - profileImage.width * profileScale * 0.5,
+                profilePosition.y - profileImage.height * profileScale * 0.5,
+                profileImage.width * profileScale,
+                profileImage.height * profileScale
+            );
+        }
+
+        const avatarFrame = new Image();
+        avatarFrame.src = avatarFrames[currentAvatarFrame];
+        avatarFrame.onload = () => {
+            ctx.drawImage(avatarFrame, 0, 0, canvas.width, canvas.height);
+
+            accessories.forEach(accessory => {
+                ctx.drawImage(
+                    accessory.img,
+                    accessory.x - accessory.img.width * accessory.scale * 0.25,
+                    accessory.y - accessory.img.height * accessory.scale * 0.25,
+                    accessory.img.width * accessory.scale * 0.5,
+                    accessory.img.height * accessory.scale * 0.5
+                );
+            });
+        };
+
+        // 移除缩略图
+        selectedThumbnail.parentElement.remove();
+
+        // 清空选中图片但不删掉 selectedAccessory 容器
+        const selectedAccessory = document.getElementById('selectedAccessory');
+        selectedAccessory.innerHTML = '<p>请选择挂件</p>'; // 或者留空：selectedAccessory.innerHTML = '';
+
+        // 隐藏删除按钮
+        deleteButton.style.display = 'none';
+    }
+
     // Select accessory thumbnail
     function selectAccessory(thumbnail) {
         const selectedAccessory = document.getElementById('selectedAccessory');
@@ -202,6 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
             positionYInput.value = selectedAccessoryPosition.y;
             scaleInput.value = selectedAccessoryScale;
         }
+
+        deleteButton.style.display = 'block'; // 显示删除按钮
     }
 
     let selectedAccessoryPosition = { x: 512, y: 512 };
@@ -240,6 +297,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         drawAccessories();
     }
+
+    // 添加删除按钮点击事件监听
+    // 添加删除按钮点击事件监听
+// 删除按钮点击事件
+    deleteButton.addEventListener('click', () => {
+        const selectedThumbnail = document.querySelector('.selected-thumbnail-img');
+        if (selectedThumbnail) {
+            deleteAccessory(selectedThumbnail);
+        } else {
+            console.error('No accessory selected for deletion');
+        }
+    });
 
     // 获取下载按钮元素
     const downloadButton = document.getElementById('downloadButton');

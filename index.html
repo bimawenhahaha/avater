@@ -19,6 +19,7 @@
         <div style="display: flex;flex-direction: column;margin-right: 16px">
             <img id="avatarFrame1" style="margin-bottom: 12px;cursor: pointer" width="50px" height="50px" src="./assets/avatarFrame1.PNG" alt="">
             <img id="avatarFrame2" style="margin-bottom: 12px;cursor: pointer" width="50px" height="50px" src="./assets/avatarFrame2.PNG" alt="">
+            <img id="avatarFrame3" style="margin-bottom: 12px;cursor: pointer" width="50px" height="50px" src="./assets/avatarFrame3.PNG" alt=""> <!-- 确保 avatarFrame3 存在 -->
         </div>
         <canvas style="flex-shrink: 0" id="avatarCanvas" width="1024" height="1024" style="border: 1px solid #ccc"></canvas>
         <!-- 添加挂件缩略图列表 -->
@@ -26,11 +27,13 @@
         <!-- 添加选中的挂件缩略图显示区域 -->
         <div style="flex-direction: column;display:flex">
             <div style="display: flex">
-                <div id="selectedAccessory" class="selected-thumbnail"></div>
+                <div id="selectedAccessory" class="selected-thumbnail">
+                </div>
                 <div style="width: 50px;padding-top: 20px;padding-left: 12px">
                     <span style="color: white">选中小组件才能切换</span>
+                 <!--   &lt;!&ndash; 删除按钮 &ndash;&gt;
+                    <button id="deleteButton" style="display: none; margin-left: 10px;">删除</button>-->
                 </div>
-
             </div>
             <div style="display: flex;flex-direction: column">
                 <!-- 添加位置和缩放控件 -->
@@ -45,12 +48,9 @@
                 <label for="accessoryInput" class="upload-button">上传小组件</label>
                 <input type="file" id="accessoryInput" multiple accept="image/*">
             </div>
-
         </div>
-
     </div>
     <div>
-
     </div>
     <div style="display:flex; width: 100%;flex-direction: row">
         <div>
@@ -72,9 +72,6 @@
         <!-- 修改按钮样式并添加id -->
         <button id="downloadButton" class="download-button">下载头像</button>
     </div>
-
-
-
 </div>
 <script type="module" src="script.js"></script>
 </body>
