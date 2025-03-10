@@ -5,16 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>币码温stonks头像生成</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .selected {
+            border: 2px solid #40E0D0; /* Turquoise color border for selected effect */
+            border-radius: 5px;
+            box-sizing: border-box; /* Ensure border does not affect element size */
+        }
+    </style>
 </head>
 <body>
 <div class="container">
     <div style="display:flex">
+        <div style="display: flex;flex-direction: column;margin-right: 16px">
+            <img id="avatarFrame1" style="margin-bottom: 12px;cursor: pointer" width="50px" height="50px" src="./assets/avatarFrame1.PNG" alt="">
+            <img id="avatarFrame2" style="margin-bottom: 12px;cursor: pointer" width="50px" height="50px" src="./assets/avatarFrame2.PNG" alt="">
+        </div>
         <canvas style="flex-shrink: 0" id="avatarCanvas" width="1024" height="1024" style="border: 1px solid #ccc"></canvas>
         <!-- 添加挂件缩略图列表 -->
         <div id="accessoryThumbnails" class="thumbnail-list"></div>
         <!-- 添加选中的挂件缩略图显示区域 -->
         <div style="flex-direction: column;display:flex">
-            <div id="selectedAccessory" class="selected-thumbnail"></div>
+            <div style="display: flex">
+                <div id="selectedAccessory" class="selected-thumbnail"></div>
+                <div style="width: 50px;padding-top: 20px;padding-left: 12px">
+                    <span style="color: white">选中小组件才能切换</span>
+                </div>
+
+            </div>
             <div style="display: flex;flex-direction: column">
                 <!-- 添加位置和缩放控件 -->
                 <label for="accessoryPositionX">Position X:</label>

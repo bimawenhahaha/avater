@@ -1,6 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 获取 canvas 元素
     const canvas = document.getElementById('avatarCanvas');
     const ctx = canvas.getContext('2d');
+
+    // 获取 avatarFrame1 和 avatarFrame2 元素
+    const avatarFrame1 = document.getElementById('avatarFrame1');
+    const avatarFrame2 = document.getElementById('avatarFrame2');
+
+    // 定义头像挂件的图片路径
+    const avatarFrames = {
+        'avatarFrame1': './assets/avatarFrame1.PNG',
+        'avatarFrame2': './assets/avatarFrame2.PNG'
+    };
+
+    // 当前选中的头像挂件
+    let currentAvatarFrame = 'avatarFrame1';
+
+    // 加载并绘制头像挂件
+    function loadAndDrawAvatarFrame(frameId) {
+        const img = new Image();
+        img.src = avatarFrames[frameId];
+        img.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+    }
+
+    // 切换头像挂件
+    function switchAvatarFrame(frameId) {
+        currentAvatarFrame = frameId;
+        loadAndDrawAvatarFrame(frameId);
+        drawProfileImage(); // 重新绘制头像和框架
+
+        // 添加选中效果
+        avatarFrame1.classList.remove('selected');
+        avatarFrame2.classList.remove('selected');
+        document.getElementById(frameId).classList.add('selected');
+    }
+
+    // 添加点击事件监听器
+    avatarFrame1.addEventListener('click', () => switchAvatarFrame('avatarFrame1'));
+    avatarFrame2.addEventListener('click', () => switchAvatarFrame('avatarFrame2'));
+
+    // 初始化时加载默认头像挂件
+    loadAndDrawAvatarFrame(currentAvatarFrame);
 
     // 启用图像平滑处理
     ctx.imageSmoothingEnabled = true;
@@ -27,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = URL.createObjectURL(file);
             img.onload = () => {
                 profileImage = img;
-                drawProfileImage();
+                drawProfileImage(); // 直接绘制头像
             };
         }
     });
@@ -42,7 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.drawImage(profileImage, profilePosition.x - profileImage.width * profileScale * 0.5, profilePosition.y - profileImage.height * profileScale * 0.5, profileImage.width * profileScale, profileImage.height * profileScale);
 
             // 绘制框架
-            ctx.drawImage(avatarFrame, 0, 0, canvas.width, canvas.height);
+            const avatarFrame = new Image();
+            avatarFrame.src = avatarFrames[currentAvatarFrame]; // 修改这里，使用当前选中的挂件路径
+            avatarFrame.onload = () => {
+                ctx.drawImage(avatarFrame, 0, 0, canvas.width, canvas.height);
+            };
 
             // 绘制挂件
             drawAccessories();
