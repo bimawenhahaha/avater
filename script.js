@@ -298,10 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
         drawAccessories();
     }
 
-    // 添加删除按钮点击事件监听
-    // 添加删除按钮点击事件监听
 // 删除按钮点击事件
     deleteButton.addEventListener('click', () => {
+
         const selectedThumbnail = document.querySelector('.selected-thumbnail-img');
         if (selectedThumbnail) {
             deleteAccessory(selectedThumbnail);
@@ -319,11 +318,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 定义下载画布为图片的函数
-    function downloadCanvasAsImage(canvas, filename) {
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png');
-        link.download = filename;
-        link.click();
+    function downloadCanvasAsImage(canvas, filename = 'download.png') {
+        if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
+            console.error('Invalid canvas element');
+            return;
+        }
+
+        try {
+            const dataURL = canvas.toDataURL('image/png');
+            if (dataURL.startsWith('data:image')) {
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = filename;
+                document.body.appendChild(link); // 兼容部分浏览器
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                console.error('Failed to generate image data URL');
+            }
+        } catch (error) {
+            console.error('Error downloading canvas image:', error);
+        }
     }
 
 });
